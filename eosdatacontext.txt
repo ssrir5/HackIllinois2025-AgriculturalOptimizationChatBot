@@ -1,0 +1,77 @@
+Normalized Difference Moisture Index (NDMI)
+
+The Normalized Difference Moisture Index (NDMI) detects moisture levels in vegetation using a combination of Near-Infrared (NIR) and Short-Wave Infrared (SWIR) spectral bands. It is a reliable indicator of water stress in crops.
+
+Why NDMI Matters?
+
+Early Detection of Water Stress: Helps identify water stress before it severely impacts crop yield.
+Irrigation Monitoring: Useful in regions where crops require more water than nature provides, improving overall crop growth.
+Wildfire Prevention: In fire-prone areas, NDMI can help monitor dry conditions and assess fuel levels.
+NDMI vs. NDWI: Understanding the Difference
+
+NDMI is sometimes confused with NDWI (Normalized Difference Water Index), but they serve different purposes:
+
+NDMI (Gao's NDWI version): Uses NIR and SWIR to measure moisture content in vegetation.
+NDWI (McFeeters's version): Uses Green and NIR to detect water bodies and their turbidity.
+Thus, NDMI should not be confused with NDWI, as it specifically focuses on vegetation moisture.
+
+NDMI Formula
+
+NDMI is calculated using the reflectance values of Near-Infrared (NIR) and Short-Wave Infrared (SWIR) bands:
+
+NDMI = (NIR - SWIR) / (NIR + SWIR)
+
+For Sentinel-2 satellite data:
+
+NDMI = (B08 - B11) / (B08 + B11)
+
+Why These Bands?
+
+SWIR: Sensitive to vegetation water content and the mesophyll structure of leaves.
+NIR: Reflects from leaf structure and dry matter content.
+Combined Use: Provides highly accurate vegetation water content data.
+Compared to NDVI, NDMI serves as a better deforestation indicator due to a less abrupt decrease in values.
+
+Interpretation of NDMI Values
+
+NDMI values range between -1 and +1, making it easy to interpret:
+
+Negative values (-1 to -0.2): Indicate bare soil or low canopy cover, often signaling water stress.
+Zero to positive values (0 to 0.4): Suggest increasing canopy cover, with some water stress present.
+Higher values (0.4 to 1): Represent healthy vegetation with no water stress, but extremely high values may indicate waterlogging.
+NDMI Interpretation Table:
+
+-1 to -0.8: Bare soil
+-0.8 to -0.6: Almost absent canopy cover
+-0.6 to -0.4: Very low canopy cover
+-0.4 to -0.2: Low canopy cover (dry or wet)
+-0.2 to 0: Mid-low canopy cover, high or low water stress
+0 to 0.2: Average canopy cover, high or low water stress
+0.2 to 0.4: Mid-high canopy cover, high or low water stress
+0.4 to 0.6: High canopy cover, no water stress
+0.6 to 0.8: Very high canopy cover, no water stress
+0.8 to 1: Total canopy cover, no water stress or waterlogging
+Key Considerations
+
+NDMI values fluctuate throughout the growing season as plant reflectance changes.
+NDMI and NDVI can be correlated, meaning water stress in NDMI can be confirmed by lower-than-average NDVI values.
+When Is NDMI Used?
+
+NDMI is useful for:
+
+Monitoring water content in crops regularly.
+Identifying farm zones experiencing water stress.
+Planning tree harvest logistics effectively.
+Assessing fire risk by determining combustibility in dry areas.
+NDMI Visualization
+
+NDMI values are commonly represented through maps and graphs:
+
+Maps: Show the spatial distribution of water stress across fields.
+Graphs: Illustrate how NDMI changes over time.
+NDMI Color Interpretation
+
+Low NDMI (white to pale brown): Low vegetation water content (water stress).
+High NDMI (blue shades): High vegetation water content (healthy crops).
+Sudden NDMI decreases: Potential water stress warning.
+Abnormally high NDMI: Possible waterlogging issue.
