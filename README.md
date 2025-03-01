@@ -1,1 +1,3 @@
-# HackIllinois2025-AgriculturalOptimizationChatBot
+# HackIllinois2025-
+
+<!-- source venv/bin/activate
