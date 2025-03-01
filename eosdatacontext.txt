@@ -1,6 +1,6 @@
 Normalized Difference Moisture Index (NDMI)
 
-The Normalized Difference Moisture Index (NDMI) detects moisture levels in vegetation using a combination of Near-Infrared (NIR) and Short-Wave Infrared (SWIR) spectral bands. It is a reliable indicator of water stress in crops.
+The Normalized Difference Moisture Index (NDMI) detects moisture levels in vegetation using a combination of Near-Infrared (NIR) and Short-Wave Infrared (SWIR) spectral bands. It is a reliable indicator of water stress in crops. 
 
 Why NDMI Matters?
 

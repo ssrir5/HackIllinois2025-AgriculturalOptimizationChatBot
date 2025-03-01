@@ -1,3 +1,4 @@
 # filepath: /Users/shreyassriram/Documents/HackIllinois2025-AgriculturalOptimizationChatBot/.gitignore
 .env
+venv/
 env/
