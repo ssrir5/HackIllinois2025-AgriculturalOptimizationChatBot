@@ -1,13 +1,27 @@
-from langchain_core.prompts import PromptTemplate
+class PromptRetriever:
+    def __init__(self, question):
+        self.question = question
+        self.context = ""
+        self.prompt_template = (
+            "You are an agricultural planning optimization assistant. Your role is to help farmers make data-driven "
+            "decisions to optimize crop yields and resource usage. You have access to detailed farm data including NDMI "
+            "measurements, soil moisture levels, weather forecasts, and more. When providing advice, integrate insights from "
+            "this data to recommend the best planting schedules, irrigation strategies, and resource allocation. If any key "
+            "details are unclear, ask for more information.\n\n"
+            "Context:\n{context}\n\n"
+            "Question: {question}\n"
+            "Answer:"
+        )
 
-template = """Use the following pieces of context to answer the question at the end.
-If you don't know the answer, just say that you don't know, don't try to make up an answer.
-Use three sentences maximum and keep the answer as concise as possible.
-Always say "thanks for asking!" at the end of the answer.
+    def add_context_from_file(self, file_path):
+        with open(file_path, 'r') as file:
+            self.context += file.read() + "\n"
 
-{context}
+    def add_context(self, additional_context):
+        self.context += additional_context + "\n"
 
-Question: {question}
+    def overwrite_question(self, new_question):
+        self.question = new_question
 
-Helpful Answer:"""
-custom_rag_prompt = PromptTemplate.from_template(template)
+    def get_prompt(self):
+        return self.prompt_template.format(context=self.context, question=self.question)
