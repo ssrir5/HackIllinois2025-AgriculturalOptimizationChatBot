@@ -1,4 +1,4 @@
-class PromptRetriever:
+class PromptRetrieverClass:
     def __init__(self, question):
         self.question = question
         self.context = ""

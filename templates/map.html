@@ -1,0 +1,277 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Map</title>
+
+    <style>
+      body {
+        background-color: rgb(0, 0, 0);
+        font-family: system-ui, sans-serif;
+        color: rgb(183, 232, 146);
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: top;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .column {
+        width: 90%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .map-container {
+        height: 90%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 0px 10px 15px rgba(82, 141, 71, 0.2);
+        border-radius: 10px;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        animation-delay: 4s;
+      }
+
+      arcgis-map {
+        height: 100%;
+        width: 100%;
+      }
+
+      .text {
+        font-weight: 100;
+        animation-name: fadeIn;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+        animation-delay: 0.5s;
+        opacity: 0;
+      }
+
+      .subtext {
+        font-size: 18px;
+        margin: 5px;
+        margin-bottom: 30px;
+        font-weight: 300;
+        color: rgb(183, 232, 146);
+        animation-name: fadeIn;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+        animation-delay: 2s;
+        opacity: 0;
+      }
+
+      #finish-button {
+        background-color: transparent;
+        color: rgb(183, 232, 146);
+        border: 2px solid rgb(183, 232, 146);
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+        animation-delay: 5s;
+      }
+
+      #finish-button:hover {
+        background-color: rgb(183, 232, 146);
+        color: rgb(0, 0, 0);
+      }
+
+      .add-plot {
+        left: 10vh;
+        top: 5vh;
+        position: fixed;
+        background-color: transparent;
+        color: rgb(183, 232, 146);
+        border: 2px solid rgb(183, 232, 146);
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+        animation-delay: 6s;
+      }
+
+      .add-plot:hover {
+        background-color: rgb(203, 255, 164);
+        color: rgb(0, 0, 0);
+      }
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      .header-column {
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+
+    <script>
+      var esriConfig = {
+        apiKey: "AAPTxy8BH1VEsoebNVZXo8HurJnZxyToPXsTkv4byngxv8GhVvvNOZ-a-YVGTCTIv08kenGUjlb7iLn14KBfIeMZ5Oiv-nQ1_cerA4xioC-WEPkplwQ48nRFC4DQWIpiVez9XZftbST2k6nG-AK4B7FE-akvQ8Wy5DLgpM0_rt9zhl4TZosagon24oQWK_JbjL2tKzlrsLSb4LF-esL_CHXgZu3jNWCoQyeqJWJr1Avmomw.AT1_n4HjuB7f"
+      };
+    </script>
+
+    <!-- Load Calcite components from CDN -->
+    <script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+
+    <!-- Load the ArcGIS Maps SDK for JavaScript from CDN -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.32/"></script>
+
+    <!-- Load Map components from CDN-->
+    <script
+      type="module"
+      src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"
+    ></script>
+
+  </head>
+  <body>
+    <button class="add-plot" id="add-polygon-button">Make Plot</button>
+    <div class="column">
+        <div class="header-column">
+          <h1 class="text">Draw a polygon to plot your field</h1>
+          <p class="subtext"><b>Click</b> to add a point, press <b>Z</b> to undo, and press <b>Enter</b> to finish</p>
+        </div>
+      <div class="map-container">
+        <arcgis-map basemap="arcgis/imagery" center="-100.805, 34.027" zoom="4">
+          <arcgis-zoom position="top-left"></arcgis-zoom>
+        </arcgis-map>
+      </div>
+      <button id="finish-button">Finish</button>
+    </div>
+
+    <script>
+      var plot_coords = [];
+
+      require([
+        "esri/Graphic", 
+        "esri/layers/GraphicsLayer", 
+        "esri/views/draw/Draw", 
+        "esri/views/draw/PolygonDrawAction",
+        "esri/geometry/support/webMercatorUtils"
+      ], (Graphic, GraphicsLayer, Draw, PolygonDrawAction, webMercatorUtils) => {
+        const arcgisMap = document.querySelector("arcgis-map");
+
+        arcgisMap.addEventListener("arcgisViewReadyChange", (event) => {
+          const view = event.target.view;
+          const graphicsLayer = new GraphicsLayer();
+          arcgisMap.addLayer(graphicsLayer);
+
+          // Initialize Draw
+          const draw = new Draw({
+            view: view
+          });
+
+          // Enable polygon drawing
+          const but = document.getElementById("add-polygon-button")
+          but.addEventListener("click", () => {
+            document.getElementById("add-polygon-button").innerText = "Redo Plot";
+            enableCreatePolygon(draw, view);
+          });
+        });
+
+        function enableCreatePolygon(draw, view) {
+          let action = draw.create("polygon");
+
+          // PolygonDrawAction.vertex-add
+          action.on("vertex-add", function (evt) {
+            createPolygonGraphic(evt.vertices, view);
+          });
+
+          // PolygonDrawAction.vertex-remove
+          action.on("vertex-remove", function (evt) {
+            createPolygonGraphic(evt.vertices, view);
+          });
+
+          // Fires when the pointer moves over the view
+          action.on("cursor-update", function (evt) {
+            createPolygonGraphic(evt.vertices, view);
+          });
+
+          // Add a graphic representing the completed polygon
+          // when user double-clicks on the view or presses the "Enter" key
+          action.on("draw-complete", function (evt) {
+            createPolygonGraphic(evt.vertices, view);
+          });
+        }
+
+        function createPolygonGraphic(vertices, view) {
+          view.graphics.removeAll();
+          let polygon = {
+            type: "polygon", // autocasts as Polygon
+            rings: vertices,
+            spatialReference: view.spatialReference
+          };
+          let ringvals = vertices.map(vertex => {
+            let [x, y] = vertex;
+            let [lng, lat] = webMercatorUtils.xyToLngLat(x, y);
+            return [lng, lat];
+          });
+          plot_coords = JSON.stringify(ringvals);
+
+          let graphic = new Graphic({
+            geometry: polygon,
+            symbol: {
+              type: "simple-fill", // autocasts as SimpleFillSymbol
+              color: [168, 50, 162, 0.8],
+              style: "solid",
+              outline: {  // autocasts as SimpleLineSymbol
+                color: "white",
+                width: 1
+              }
+            }
+          });
+          view.graphics.add(graphic);
+        }
+      });
+
+      document.getElementById("finish-button").addEventListener("click", () => {
+        fetch("/save_coords", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ plot_coords: plot_coords })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Success:", data);
+          window.location.href = "/message";
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      });
+    </script>
+  </body>
+</html>

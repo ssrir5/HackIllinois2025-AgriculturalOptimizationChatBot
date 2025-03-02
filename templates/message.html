@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlowPal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: system-ui, sans-serif;
+            background-color: black;
+        }
+
+        .boxed {
+            animation-name: fadein;
+            animation-duration: 6s;
+            max-height: 80%;
+        }
+        @keyframes fadein {
+            0% { opacity: 0; }
+            30% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        #chatbox {
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+            max-height: 50vh; /* Set a maximum height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin-top: 60px;
+            min-height: 30vh;
+            border-style: solid;
+            border-radius: 20px;
+            border-width: 1px;
+            border-color: rgb(183, 232, 146);
+            padding: 15px;
+            background: black;
+            box-shadow: 0px 0px 10px 15px rgba(82, 141, 71, 0.2);
+        }
+        #userInput {
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+        #textInput {
+            color: rgb(183, 232, 146);
+            width: 80%;
+            border: none;
+            background-color: black;
+            font-family: monospace;
+            font-size: 17px;
+            padding: 10px;
+            border-style: none;
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+        }
+        ::placeholder {
+            color: rgba(67, 86, 53, 0.8);
+            opacity: 1;
+        }
+        .userText {
+            color: white;
+            font-family: monospace;
+            font-size: 17px;
+            text-align: right;
+            line-height: 30px;
+        }
+        .userText span {
+            background-color: #808080;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .botText {
+            color: white;
+            font-family: monospace;
+            font-size: 17px;
+            text-align: left;
+            line-height: 30px;
+        }
+        .botText span {
+            background-color: #4169e1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #title-container {
+            color: rgb(183, 232, 146);
+            position: relative;
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+        #title-content {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: -300px;
+            transition: left 2s ease-in-out;
+        }
+        #tractor {
+            width: 100px;
+            height: auto;
+            margin-left: 10px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .sendbut {
+            background-color: transparent;
+            color: rgb(183, 232, 146);
+            border: 2px solid rgb(183, 232, 146);
+            height: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-left: 10px;
+            font-family: monospace;
+            display: none; /* Initially hidden */
+        }
+        .sendbut:hover {
+            background-color: rgb(0, 0, 0);
+            color: rgb(183, 232, 146);
+        }
+    </style>
+</head>
+<body>
+    <div id="title-container">
+        <div id="title-content">
+            <h1><b>PlowPal</b></h1>
+            <img id="tractor" src="/static/tractor.png" alt="Tractor">
+        </div>
+    </div>
+    <div class="boxed">
+        <div id="chatbox">
+            <p class="botText">
+                <span>Hi! I'm your AI-Generative Chatbot</span>
+            </p>
+        </div>
+        <div id="userInput">
+            <textarea id="textInput" name="msg" placeholder="Message"></textarea>
+            <button class="sendbut" id="sendButton" onclick="getBotResponse()">Send</button>
+        </div>
+    </div>
+    <script>
+        function animateTitle() {
+            var titleContent = document.getElementById("title-content");
+            titleContent.style.left = "50%";
+            titleContent.style.transform = "translateX(-50%)";
+        }
+        window.onload = animateTitle;
+
+        function getBotResponse() {
+            $("#sendButton").hide();
+            var rawText = $("#textInput").val();
+            var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+            $("#textInput").val("");
+            $("#chatbox").append(userHtml);
+            scrollToBottom();
+            $.get("/get", { msg: rawText }).done(function (data) {
+                var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+                $("#chatbox").append(botHtml);
+                scrollToBottom();
+            });
+        }
+
+        function scrollToBottom() {
+            var chatbox = document.getElementById("chatbox");
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        $("#textInput").on("input", function() {
+            var text = $(this).val();
+            if (text.trim().length > 0) {
+                $("#sendButton").show();
+            } else {
+                $("#sendButton").hide();
+            }
+        });
+
+        $("#textInput").keypress(function (e) {
+            if (e.which == 13 && !e.shiftKey) {
+                e.preventDefault();
+                getBotResponse();
+            }
+        });
+    </script>
+</body>
+</html>

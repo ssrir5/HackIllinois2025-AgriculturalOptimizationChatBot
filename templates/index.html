@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <style>
+            body{
+                background-color: rgb(0, 0, 0);
+                font-family: system-ui, sans-serif;
+                color: rgb(183, 232, 146);
+                text-align: center;
+                animation-name: fadein;
+                animation-duration: 4s;
+                }
+            @keyframes fadein {
+                0% { opacity: 0; }
+                30% { opacity: 0; }
+                100%   { opacity: 1; }
+            }
+
+            .hello{
+                font-weight: 100;
+                margin-top: 50vh;
+                transform: translateY(-50%);
+                animation-name: title;
+                animation-duration: 4s;
+            }
+            /* @keyframes title {
+            0%   {opacity: 0;}
+            20% {opacity: 0;}
+            } */
+
+            .plot {
+                margin-top: -3vh;
+                font-family: system-ui, sans-serif;
+                color: rgb(183, 232, 146);
+                font-weight: 90;
+                font-size: 1.2em;
+                background-color: transparent;
+                border-style: solid;
+                border-color: rgb(183, 232, 146);
+                border-radius: 10px;
+                border-width: 1px;
+                padding: 5px 15px;
+                cursor: pointer;
+            }
+            .plot:hover {
+                background-color: rgb(203, 255, 164);
+                color: rgb(0, 0, 0);
+                transition: .2s;
+            }
+
+
+            
+        </style>
+    </head>
+    <body>
+        <h1 class="hello"><b>PlowPal</b></h1>
+        <!-- <img id="tractor" src="/static/tractor.png" alt="Tractor"> -->
+        <a href="/map"><button class="plot">get started</button></a>
+    </body>
+</html>
